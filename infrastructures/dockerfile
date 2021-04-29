@@ -1,0 +1,24 @@
+# https://hub.docker.com/_/python
+# DTT 22/12/20 Python 3.8 accepted in official Dockerfile found at
+#              https://github.com/pytorch/pytorch/blob/master/docker/pytorch/Dockerfile
+FROM python:3.8.6-buster
+
+RUN mkdir /app
+WORKDIR /app
+
+RUN apt-get update \
+    # Latest pip
+    && pip install --upgrade pip
+
+# All Python required libraries are defined in the requirements.txt file
+# DTT 22/12/20 Installation command obtained from https://pytorch.org/resources/
+#              (end of page: Stable release, Linux, pip, Python, no cuda):
+#              pip install torch==1.7.1+cpu torchvision==0.8.2+cpu torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+COPY docker-python-requirements.txt requirements.txt
+RUN pip install -r requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
+
+# As it will be just a test, code will be accessed through a volume
+# No COPY of code provided
+
+# As it will be manually executed from the bash of the container
+# No CMD provided

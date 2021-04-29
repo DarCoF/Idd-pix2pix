@@ -1,0 +1,19 @@
+torch==1.7.1+cpu
+torchvision==0.8.2+cpu
+utils==1.0.1
+matplotlib==3.3.3
+tensorboard==2.4.1
+pytorch-fid==0.2.0
+# numpy
+# ninja
+# pyyaml
+# mkl
+# mkl-include
+# setuptools
+# cmake
+# cffi
+# typing_extensions
+# future
+# six
+# requests
+# dataclasses

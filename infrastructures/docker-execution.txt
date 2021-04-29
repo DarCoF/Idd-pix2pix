@@ -1,0 +1,7 @@
+Image creation:   docker image build -t mrzhuimage .
+
+Image execution:  docker container run -it --rm -v $(pwd):/app -v $(pwd)/../Datasets:/Datasets mrzhuimage bash
+
+Script execution: python transform-dataset.py --source_path /Datasets/Inria-AerialImageLabeling/AerialImageDataset/train --dest_path /Datasets/Inria-AerialImageLabeling/nosplit542 --side_size 542 --crop_size 5000
+
+Train execution: python train.py --cuda --threads 2 --lamb 100 --tb_number_img 2 --dest_train /Datasets/Inria-AerialImageLabeling/split2x2/train --dest_valid /Datasets/Inria-AerialImageLabeling/split2x2/valid --batch_size 5 --iter_messages 10

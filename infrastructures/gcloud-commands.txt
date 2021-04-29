@@ -1,0 +1,23 @@
+gcloud compute ssh diegotascon@aidl2021-vm
+
+python train.py --cuda --threads 1 --lamb 100 --dest_train /home/aidl2021/datasets/split2x2/train --dest_valid /home/aidl2021/datasets/split2x2/test --batch_size 16 --test_batch_size 6 --debug 0 --niter 450 --niter_decay 450 --tb_number_img 9 --checkpoint_epochs 100 --tb_image vienna1_1.npy > trainlog-20210210-900epochs.log &
+
+jobs -l
+disown
+
+nvidia-smi -q -d MEMORY -l 5 | grep Free
+
+tensorboard --logdir /home/aidl2021/datasets/split2x2/train/log --host 10.138.0.2
+tensorboard --logdir $(pwd) --host 10.138.0.2
+
+# Train from a saved checkpoint
+python train.py --cuda --threads 1 --lamb 100 --dest_train /home/aidl2021/datasets/split2x2/train --dest_valid /home/aidl2021/datasets/split2x2/test --batch_size 16 --test_batch_size 6 --debug 0 --epoch_count 101 --niter 450 --niter_decay 450 --tb_number_img 9 --checkpoint_epochs 100 --stop_after_checkpoint 0 --load_pretrained 1 --tb_image vienna1_1.npy > trainlog-20210211-900epochscont.log &
+
+# Train split batchnorm model from scratch
+python train.py --cuda --threads 1 --lamb 100 --dest_train /home/aidl2021/datasets/split2x2/train --dest_valid /home/aidl2021/datasets/split2x2/test --batch_size 16 --test_batch_size 6 --debug 0 --epoch_count 1 --niter 450 --niter_decay 450 --tb_number_img 9 --checkpoint_epochs 100 --stop_after_checkpoint 0 --load_pretrained 0 --tb_image vienna1_1.npy > trainlog-20210211-900epochs.log &
+
+# Train generator alone code from scratch with 2x2 split dataset
+python train-generator.py --cuda --threads 1 --lamb 100 --dest_train /home/aidl2021/datasets/split2x2/train --dest_valid /home/aidl2021/datasets/split2x2/test --batch_size 16 --test_batch_size 6 --debug 0 --epoch_count 1 --niter 450 --niter_decay 450 --tb_number_img 9 --checkpoint_epochs 100 --stop_after_checkpoint 0 --load_pretrained 0 --tb_image vienna1_1.npy > trainlog-20210215-900epochs.log &
+
+# Train generator alone code from scratch with nosplit dataset
+python train-generator.py --cuda --threads 1 --lamb 100 --dest_train /home/aidl2021/datasets/nosplit/train --dest_valid /home/aidl2021/datasets/nosplit/test --batch_size 16 --test_batch_size 6 --debug 0 --epoch_count 1 --niter 450 --niter_decay 450 --tb_number_img 9 --checkpoint_epochs 100 --stop_after_checkpoint 0 --load_pretrained 0 --tb_image vienna1_1.npy > trainlog-20210222-900epochs.log &
